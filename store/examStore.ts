@@ -101,7 +101,8 @@ export const useExamStore = create<ExamState>()(
       })),
 
       fetchNextQuestion: async () => {
-        set({ isGenerating: true, error: null });
+        // Explicitly clear existing questions first, then mark as generating
+        set({ questions: [], isGenerating: true, error: null });
         try {
           // Dynamic import to avoid breaking Zustand with fetchWithAuth circular deps if any,
           // but we can just use the global fetch or fetchWithAuth.
@@ -164,6 +165,8 @@ export const useExamStore = create<ExamState>()(
                explanation: q.explanation || ''
              };
           });
+
+          console.log('[fetchNextQuestion] Parsed questions:', JSON.stringify(newQuestions.slice(0, 2), null, 2));
 
           set({
              questions: newQuestions,
@@ -300,14 +303,15 @@ export const useExamStore = create<ExamState>()(
     }),
     {
       name: 'exam-storage',
-      version: 2,
+      version: 3,
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
-        // Only persist session history and config — NOT in-flight questions
-        // This prevents stale placeholder questions from surviving a page refresh
+        // ONLY persist session history — never questions or examConfig.
+        // examConfig is set fresh on every dashboard click via startExamSession.
+        // Persisting it caused async localStorage rehydration to overwrite the
+        // fresh config with stale/null data, making fetchNextQuestion fire with wrong params.
         userSessions: state.userSessions,
         sessionHistory: state.sessionHistory,
-        examConfig: state.examConfig,
       }),
     }
   )

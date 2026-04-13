@@ -69,11 +69,17 @@ export default function ExamPage() {
      }
   }, [examTimeLeft, isExamFinished, finishExamBlock, isMounted]);
 
+  // DEBUG: log full questions array every time store updates
   useEffect(() => {
-    if (questions.length === 0 && !isGenerating && !error) {
+    console.log('Current Store Questions:', questions);
+  }, [questions, currentQuestionIndex, isGenerating]);
+
+  // Only trigger fetch AFTER mount (so examConfig from dashboard click is in the store)
+  useEffect(() => {
+    if (isMounted && questions.length === 0 && !isGenerating && !error) {
       fetchNextQuestion();
     }
-  }, [questions.length, isGenerating, error, fetchNextQuestion]);
+  }, [isMounted, questions.length, isGenerating, error, fetchNextQuestion]);
 
   // Handle jump fetching logic
   useEffect(() => {
@@ -106,11 +112,13 @@ export default function ExamPage() {
   // EXAM RENDER
   // -----------------------------------------------------
 
-  if ((!currentQuestion && isGenerating) || (questions.length === 0 && isGenerating)) {
+  if (isGenerating || (isMounted && questions.length === 0)) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] animate-in fade-in duration-500">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900 mb-6"></div>
-        <p className="text-slate-900 text-lg font-bold">Downloading blueprint...</p>
+        <p className="text-slate-900 text-lg font-bold">
+          {isGenerating ? 'Downloading blueprint...' : 'Preparing questions...'}
+        </p>
       </div>
     );
   }
@@ -129,7 +137,14 @@ export default function ExamPage() {
     );
   }
 
-  if (!currentQuestion) return null;
+  if (!currentQuestion) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[70vh] animate-in fade-in duration-500">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900 mb-6"></div>
+        <p className="text-slate-900 text-lg font-bold">Loading question...</p>
+      </div>
+    );
+  }
 
   const selectedOption = answers[currentQuestionIndex];
   const isLocked = questionLocks[currentQuestionIndex];
