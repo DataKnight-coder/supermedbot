@@ -17,9 +17,9 @@ export default function LandingPage() {
          </div>
          <nav className="flex items-center gap-6">
             <Link href="/login" className="text-sm font-bold text-indigo-950 hover:text-cyan-600 transition-colors">Sign In</Link>
-            <Link href="/register" className="px-6 py-2.5 bg-indigo-950 text-white text-sm font-bold rounded-full hover:bg-cyan-600 shadow-md transition-all active:scale-95">
-               Request Access
-            </Link>
+            <a href="mailto:admin@supermedpros.com" className="px-6 py-2.5 bg-indigo-950 text-white text-sm font-bold rounded-full hover:bg-cyan-600 shadow-md transition-all active:scale-95">
+               Contact for Access
+            </a>
          </nav>
       </header>
 
@@ -43,10 +43,10 @@ export default function LandingPage() {
             Train against dynamic, Canadian-standard medical cases. Our rigorous test engine explicitly forces timed decision-making against complex distractors to guarantee passing thresholds.
          </p>
 
-         <Link href="/register" className="group flex items-center justify-center gap-3 px-10 py-5 bg-cyan-600 text-white rounded-2xl font-black text-lg hover:bg-cyan-500 shadow-xl shadow-cyan-600/20 active:scale-95 transition-all">
-            Request Access 
+         <a href="mailto:admin@supermedpros.com" className="group flex items-center justify-center gap-3 px-10 py-5 bg-cyan-600 text-white rounded-2xl font-black text-lg hover:bg-cyan-500 shadow-xl shadow-cyan-600/20 active:scale-95 transition-all">
+            Contact for Access 
             <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-         </Link>
+         </a>
       </main>
 
       {/* Features Section */}

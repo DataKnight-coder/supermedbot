@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useExamStore } from "@/store/examStore";
 import { useRouter } from "next/navigation";
 import { HeartPulse, Baby, Activity, Brain, Scale, Stethoscope, Ambulance, Users, Globe, Syringe } from "lucide-react";
@@ -29,6 +30,76 @@ export default function DashboardPage() {
     }
     router.push("/exam");
   };
+
+  const [isWakingBackend, setIsWakingBackend] = useState(true);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+     let mounted = true;
+     let attempts = 0;
+     const maxAttempts = 15; // 15 * 4s = 1 min timeout
+
+     const pingRenderInstance = async () => {
+         const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://supermedbot-backend.onrender.com';
+         try {
+            const res = await fetch(`${API_URL}/docs`, {
+               // Fire a lightweight GET to check if the app is awake
+               method: 'GET',
+               cache: 'no-store'
+            });
+            
+            if (res.ok || res.status < 500) {
+               if (mounted) setIsWakingBackend(false);
+            } else {
+               throw new Error("502");
+            }
+         } catch (e) {
+            attempts++;
+            if (attempts >= maxAttempts) {
+               if (mounted) {
+                  setIsWakingBackend(false);
+                  setHasError(true);
+               }
+            } else {
+               if (mounted) setTimeout(pingRenderInstance, 4000);
+            }
+         }
+     };
+     
+     pingRenderInstance();
+     return () => { mounted = false; };
+  }, []);
+
+  if (isWakingBackend) {
+     return (
+        <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 font-sans text-center animate-in fade-in duration-1000">
+            <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-6 border border-indigo-100 shadow-inner">
+               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-950"></div>
+            </div>
+            <h2 className="text-2xl font-black text-indigo-950 tracking-tight mb-2">Engaging Clinical Servers</h2>
+            <p className="text-slate-500 font-medium max-w-sm leading-relaxed">
+               Please wait while the secure exam engine spins up. Cloud cold starts typically take 30-50 seconds...
+            </p>
+        </div>
+     );
+  }
+
+  if (hasError) {
+     return (
+        <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 font-sans text-center">
+            <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center mb-6 border border-rose-100">
+               <Activity className="w-8 h-8 text-rose-500" />
+            </div>
+            <h2 className="text-2xl font-black text-indigo-950 tracking-tight mb-2">Connection Timeout</h2>
+            <p className="text-slate-500 font-medium max-w-sm leading-relaxed mb-6">
+               The server is unresponsive. Check your internet connection or try reloading.
+            </p>
+            <button onClick={() => window.location.reload()} className="px-6 py-3 bg-indigo-950 hover:bg-slate-900 text-white rounded-xl font-bold uppercase tracking-widest text-xs transition-colors">
+               Retry Connection
+            </button>
+        </div>
+     );
+  }
 
   return (
     <div className="max-w-6xl mx-auto mt-12 px-6 pb-12">

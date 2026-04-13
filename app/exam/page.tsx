@@ -142,8 +142,8 @@ export default function ExamPage() {
     try {
       setTimeout(() => {
         submitQuestion(currentQuestionIndex, {
-          correctKey: "B", // Mock correct key logic
-          explanation: "Option B is correct because a CMP is the appropriate next step for fatigue and weight loss. This presentation is classic for an initial assessment where full metabolic panel guides further pipelines.",
+          correctKey: currentQuestion.correct_answer || "A", 
+          explanation: currentQuestion.explanation || "No explanation provided.",
         });
         setLoading(false);
       }, 500);

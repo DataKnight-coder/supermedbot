@@ -5,6 +5,8 @@ export interface ExamQuestion {
   id: string;
   vignette: string;
   options: { key: string; text: string }[];
+  correct_answer?: string;
+  explanation?: string;
 }
 
 export interface ExamConfig {
@@ -113,63 +115,52 @@ export const useExamStore = create<ExamState>()(
           const body = JSON.stringify({
              category: examConfig?.category || 'Full Mock',
              mode: examConfig?.mode || 'tutor',
-             targetCount: examConfig?.count || 40,
+             count: examConfig?.count || 40,
           });
           const res = await fetch(`${API_URL}/api/questions/generate`, { method: 'POST', headers, body }).catch(() => null);
           
           if (!res || !res.ok) throw new Error("Generation failed");
           const data = await res.json();
 
-          let vignette = data.vignette || data.content || '';
-          let parsedOptions: {key: string; text: string}[] = [];
+          // Ensure data is treated as an array of questions
+          const questionsList = Array.isArray(data) ? data : (data.questions ? data.questions : [data]);
 
-          if (Array.isArray(data.options)) {
-            if (typeof data.options[0] === 'string') {
-              const keys = ['A', 'B', 'C', 'D', 'E'];
-              parsedOptions = data.options.map((opt: string, i: number) => ({ key: keys[i] || String(i), text: opt }));
-            } else {
-              parsedOptions = data.options; // assume it's already {key, text}
-            }
-          } else if (data.options && typeof data.options === 'object') {
-             parsedOptions = Object.entries(data.options).map(([k, v]) => ({ key: k.replace(/option_/i, '').toUpperCase(), text: String(v) }));
-          } else {
-             // Try to find flattened option properties
-             const manualOptions: any[] = [];
-             ['A', 'B', 'C', 'D', 'E'].forEach((letter) => {
-                const searchKeys = [`option_${letter}`, `option_${letter.toLowerCase()}`, `option${letter}`, letter];
-                for (const sk of searchKeys) {
-                    if (data[sk]) {
-                       manualOptions.push({ key: letter, text: data[sk] });
-                       break;
-                    }
+          const newQuestions: ExamQuestion[] = questionsList.map((q: any) => {
+             let vignette = q.question_text || q.vignette || q.content || '';
+             let parsedOptions: {key: string; text: string}[] = [];
+
+             if (Array.isArray(q.options)) {
+                if (typeof q.options[0] === 'string') {
+                   const keys = ['A', 'B', 'C', 'D', 'E'];
+                   parsedOptions = q.options.map((opt: string, i: number) => ({ key: keys[i] || String(i), text: opt }));
+                } else {
+                   parsedOptions = q.options; // assume it's already {key, text}
                 }
-             });
-             parsedOptions = manualOptions;
-          }
-
-          if (parsedOptions.length === 0) {
-             // Fallback
-             parsedOptions = [
-                { key: 'A', text: 'Option A Placeholder' },
-                { key: 'B', text: 'Option B Placeholder' },
-                { key: 'C', text: 'Option C Placeholder' },
-                { key: 'D', text: 'Option D Placeholder' },
-                { key: 'E', text: 'Option E Placeholder' },
-             ];
-             // If the backend sent everything nicely formatted through the content
-             if (vignette && vignette.includes('A)') && vignette.includes('B)')) {
-                 // The backend might just dump text into content. We leave options as A, B, C...
+             } else if (q.options && typeof q.options === 'object') {
+                parsedOptions = Object.entries(q.options).map(([k, v]) => ({ key: k.replace(/option_/i, '').toUpperCase(), text: String(v) }));
              }
-          }
 
-          const newQ: ExamQuestion = {
-            id: data.id || `q-${Date.now()}`,
-            vignette,
-            options: parsedOptions
-          };
+             if (parsedOptions.length === 0) {
+                parsedOptions = [
+                   { key: 'A', text: 'Option A Placeholder' },
+                   { key: 'B', text: 'Option B Placeholder' },
+                   { key: 'C', text: 'Option C Placeholder' },
+                   { key: 'D', text: 'Option D Placeholder' },
+                   { key: 'E', text: 'Option E Placeholder' },
+                ];
+             }
+
+             return {
+               id: q.id || `q-${Math.random().toString(36).substring(7)}`,
+               vignette,
+               options: parsedOptions,
+               correct_answer: q.correct_answer || 'A',
+               explanation: q.explanation || ''
+             };
+          });
 
           set((state) => ({
-             questions: [...state.questions, newQ],
+             questions: [...state.questions, ...newQuestions],
              isGenerating: false,
              error: null,
           }));

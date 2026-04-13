@@ -100,7 +100,7 @@ export default function LoginPage() {
 
             <div className="bg-slate-50 border-t border-slate-100 p-6 text-center">
                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-                  No active clearance? <Link href="/register" className="text-cyan-600 hover:text-cyan-700 transition-colors ml-1 hover:underline">Request Access</Link>
+                  No active clearance? <a href="mailto:admin@supermedpros.com" className="text-cyan-600 hover:text-cyan-700 transition-colors ml-1 hover:underline">Contact Admin</a>
                </p>
             </div>
          </div>
