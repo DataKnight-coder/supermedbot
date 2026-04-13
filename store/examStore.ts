@@ -223,9 +223,23 @@ export const useExamStore = create<ExamState>()(
          const totalQuestions = state.examConfig?.count || 40;
          let correct = 0;
          const incorrectQuestionIds: string[] = [];
+         const finalResults = { ...state.results };
          
          for (let i = 0; i < totalQuestions; i++) {
-            const res = state.results[i];
+            const q = state.questions[i];
+            // Auto-populate results for questions that were never submitted
+            if (!finalResults[i] && q) {
+               const selectedOption = state.answers[i];
+               const correctKey = q.correctAnswer || 'A';
+               const isCorrect = selectedOption === correctKey;
+               finalResults[i] = {
+                  correctKey,
+                  explanation: q.explanation || 'No explanation provided.',
+                  isCorrect
+               };
+            }
+            
+            const res = finalResults[i];
             if (res && res.isCorrect) correct++;
             // Note: If skipped or incorrect, consider it wrong + add to log
             if (!res || !res.isCorrect) {
@@ -264,6 +278,7 @@ export const useExamStore = create<ExamState>()(
          
          return {
             isExamFinished: true,
+            results: finalResults,
             userSessions: [...state.userSessions, newRecord],
             sessionHistory: [...state.sessionHistory, newLog]
          };

@@ -83,13 +83,13 @@ export default function ReportPage() {
                                    </div>
                                    <div className="bg-emerald-50 rounded-2xl p-5 border border-emerald-100">
                                       <strong className="block text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-1">Correct Answer</strong>
-                                      <p className="text-lg font-bold text-emerald-900">{res?.correctKey || "N/A"}</p>
+                                      <p className="text-lg font-bold text-emerald-900">{res?.correctKey || q?.correctAnswer || "N/A"}</p>
                                    </div>
                                 </div>
 
                                 <div className="bg-indigo-950 rounded-2xl p-6 shadow-inner">
                                    <strong className="block text-[10px] font-black uppercase tracking-widest text-cyan-400 mb-2">Rationale</strong>
-                                   <p className="text-white text-sm leading-relaxed tracking-wide">{res?.explanation || "No explanation recorded."}</p>
+                                   <p className="text-white text-sm leading-relaxed tracking-wide">{res?.explanation || q?.explanation || "No explanation recorded."}</p>
                                 </div>
                              </div>
                           </div>
