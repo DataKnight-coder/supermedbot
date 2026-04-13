@@ -73,7 +73,7 @@ export default function ReportPage() {
                              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
                                 <div>
                                    <strong className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Clinical Vignette</strong>
-                                   <p className="text-slate-800 leading-relaxed font-medium text-sm">{q?.vignette || "Unanswered Mock Data"}</p>
+                                   <p className="text-slate-800 leading-relaxed font-medium text-sm">{q?.text || "Unanswered Mock Data"}</p>
                                 </div>
                                 
                                 <div className="grid grid-cols-2 gap-4">
