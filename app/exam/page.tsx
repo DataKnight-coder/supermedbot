@@ -142,7 +142,7 @@ export default function ExamPage() {
     try {
       setTimeout(() => {
         submitQuestion(currentQuestionIndex, {
-          correctKey: currentQuestion.correct_answer || "A", 
+          correctKey: currentQuestion.correctAnswer || "A", 
           explanation: currentQuestion.explanation || "No explanation provided.",
         });
         setLoading(false);
@@ -213,7 +213,7 @@ export default function ExamPage() {
          <div className="lg:col-span-3">
             <div className="bg-white rounded-3xl p-8 sm:p-12 mb-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
                <p className="text-xl text-slate-800 leading-relaxed font-medium mb-12">
-                  {currentQuestion.vignette}
+                  {currentQuestion.text}
                </p>
                
                <div className="space-y-3">

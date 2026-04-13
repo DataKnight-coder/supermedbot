@@ -3,9 +3,9 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 export interface ExamQuestion {
   id: string;
-  vignette: string;
+  text: string;
   options: { key: string; text: string }[];
-  correct_answer?: string;
+  correctAnswer?: string;
   explanation?: string;
 }
 
@@ -126,13 +126,19 @@ export const useExamStore = create<ExamState>()(
           const questionsList = Array.isArray(data) ? data : (data.questions ? data.questions : [data]);
 
           const newQuestions: ExamQuestion[] = questionsList.map((q: any) => {
-             let vignette = q.question_text || q.vignette || q.content || '';
+             let text = q.text || q.question_text || q.vignette || q.content || '';
              let parsedOptions: {key: string; text: string}[] = [];
 
              if (Array.isArray(q.options)) {
                 if (typeof q.options[0] === 'string') {
                    const keys = ['A', 'B', 'C', 'D', 'E'];
                    parsedOptions = q.options.map((opt: string, i: number) => ({ key: keys[i] || String(i), text: opt }));
+                } else if (q.options[0] && q.options[0].text) {
+                   const keys = ['A', 'B', 'C', 'D', 'E'];
+                   parsedOptions = q.options.map((opt: any, i: number) => ({ 
+                       key: opt.key || keys[i] || String(i), 
+                       text: opt.text || String(opt) 
+                   }));
                 } else {
                    parsedOptions = q.options; // assume it's already {key, text}
                 }
@@ -152,18 +158,19 @@ export const useExamStore = create<ExamState>()(
 
              return {
                id: q.id || `q-${Math.random().toString(36).substring(7)}`,
-               vignette,
+               text,
                options: parsedOptions,
-               correct_answer: q.correct_answer || 'A',
+               correctAnswer: q.correctAnswer || q.correct_answer || 'A',
                explanation: q.explanation || ''
              };
           });
 
-          set((state) => ({
-             questions: [...state.questions, ...newQuestions],
+          set({
+             questions: newQuestions,
+             currentQuestionIndex: 0,
              isGenerating: false,
              error: null,
-          }));
+          });
         } catch (error: any) {
           console.error("Failed to fetch next question:", error);
           set({ isGenerating: false, error: error.message || "Failed to generate vignette" });
@@ -292,8 +299,16 @@ export const useExamStore = create<ExamState>()(
       })
     }),
     {
-      name: 'exam-storage', 
+      name: 'exam-storage',
+      version: 2,
       storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        // Only persist session history and config — NOT in-flight questions
+        // This prevents stale placeholder questions from surviving a page refresh
+        userSessions: state.userSessions,
+        sessionHistory: state.sessionHistory,
+        examConfig: state.examConfig,
+      }),
     }
   )
 );
