@@ -11,23 +11,37 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        // Brand Colors
+        brand: {
+          'medical': '#0B3C5D',   // Medical Blue – headers, authority
+          'action': '#1DA1F2',    // Action Blue – buttons, links
+          'teal': '#17C3B2',      // Teal Accent – callouts, icons
+          'light': '#F5F7FA',     // Light Gray – backgrounds
+          'dark': '#1A1A1A',      // Dark Text
+        },
+        // Legacy mapping for components
         clinical: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
+          50: '#F5F7FA',
+          100: '#e8ecf2',
+          200: '#d1d9e5',
+          300: '#b0bed3',
+          400: '#7a8da9',
+          500: '#5a6f8a',
           600: '#475569',
           700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
+          800: '#1A1A1A',
+          900: '#0B3C5D',
         },
         accent: {
-          light: '#60a5fa',
-          DEFAULT: '#3b82f6',
-          dark: '#2563eb',
+          light: '#17C3B2',
+          DEFAULT: '#1DA1F2',
+          dark: '#0B3C5D',
         }
+      },
+      fontFamily: {
+        heading: ['Montserrat', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
+        accent: ['Playfair Display', 'serif'],
       },
     },
   },

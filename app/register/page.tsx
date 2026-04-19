@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { UserPlus } from "lucide-react";
 
 export default function RegisterPage() {
@@ -22,16 +23,16 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="w-full max-w-md bg-white rounded-[2rem] shadow-xl shadow-indigo-950/5 border border-slate-100 overflow-hidden">
+    <div className="flex min-h-screen items-center justify-center bg-brand-light px-4 sm:px-6 lg:px-8 font-body">
+      <div className="w-full max-w-md bg-white rounded-[2rem] shadow-xl shadow-brand-medical/5 border border-slate-100 overflow-hidden">
          {/* Minimalist Medical ID Header */}
-         <div className="bg-indigo-950 p-8 flex items-center gap-5">
+         <div className="bg-brand-medical p-8 flex items-center gap-5">
              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner">
-                 <UserPlus className="w-8 h-8 text-cyan-400 stroke-[2.5]" />
+                 <Image src="/logo.webp" alt="SuperMedPros" width={40} height={40} className="rounded-lg" />
              </div>
              <div>
-                <h2 className="text-xl font-black text-white tracking-tight uppercase">Medical Access Request</h2>
-                <p className="text-cyan-400 font-bold text-[10px] uppercase tracking-widest mt-1">SuperMedBot Systems</p>
+                <h2 className="font-heading text-xl font-black text-white tracking-tight uppercase">Medical Access Request</h2>
+                <p className="text-brand-teal font-bold text-[10px] uppercase tracking-widest mt-1">SuperMedBot Systems</p>
              </div>
          </div>
 
@@ -44,7 +45,7 @@ export default function RegisterPage() {
                 <input
                   type="text"
                   required
-                  className="block w-full rounded-2xl border-2 border-slate-200 py-3.5 px-5 text-slate-900 font-bold hover:border-slate-300 focus:border-cyan-600 focus:ring-4 focus:ring-cyan-600/10 transition-all outline-none"
+                  className="block w-full rounded-2xl border-2 border-slate-200 py-3.5 px-5 text-brand-dark font-bold hover:border-slate-300 focus:border-brand-action focus:ring-4 focus:ring-brand-action/10 transition-all outline-none"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="name@provider.com"
@@ -58,7 +59,7 @@ export default function RegisterPage() {
                 <input
                   type="password"
                   required
-                  className="block w-full rounded-2xl border-2 border-slate-200 py-3.5 px-5 text-slate-900 font-bold tracking-widest hover:border-slate-300 focus:border-cyan-600 focus:ring-4 focus:ring-cyan-600/10 transition-all outline-none"
+                  className="block w-full rounded-2xl border-2 border-slate-200 py-3.5 px-5 text-brand-dark font-bold tracking-widest hover:border-slate-300 focus:border-brand-action focus:ring-4 focus:ring-brand-action/10 transition-all outline-none"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
@@ -69,7 +70,7 @@ export default function RegisterPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full rounded-2xl bg-cyan-600 py-4.5 text-xs font-black text-white hover:bg-cyan-500 shadow-xl shadow-cyan-600/20 transition-all active:scale-95 uppercase tracking-widest disabled:opacity-50"
+                  className="w-full rounded-2xl bg-brand-action py-4.5 text-xs font-black text-white hover:bg-brand-teal shadow-xl shadow-brand-action/20 transition-all active:scale-95 uppercase tracking-widest disabled:opacity-50"
                   style={{ minHeight: '56px' }}
                 >
                   {isLoading ? 'Processing Request...' : 'Submit Credentials'}
@@ -78,9 +79,9 @@ export default function RegisterPage() {
             </form>
          </div>
 
-         <div className="bg-slate-50 border-t border-slate-100 p-6 text-center">
+         <div className="bg-brand-light border-t border-slate-100 p-6 text-center">
             <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-               Already hold clearance? <Link href="/login" className="text-indigo-950 hover:text-cyan-600 hover:underline transition-colors ml-1">Sign in here</Link>
+               Already hold clearance? <Link href="/login" className="text-brand-medical hover:text-brand-action hover:underline transition-colors ml-1">Sign in here</Link>
             </p>
          </div>
       </div>

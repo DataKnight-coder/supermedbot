@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ShieldCheck, AlertCircle } from "lucide-react";
 
 export default function LoginPage() {
@@ -30,7 +31,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 sm:px-6 lg:px-8 font-sans">
+    <div className="flex min-h-screen items-center justify-center bg-brand-light px-4 sm:px-6 lg:px-8 font-body">
       <div className="w-full max-w-md">
          
          {errorStatus === 403 && (
@@ -45,15 +46,15 @@ export default function LoginPage() {
             </div>
          )}
          
-         <div className="bg-white rounded-[2rem] shadow-xl shadow-indigo-950/5 border border-slate-100 overflow-hidden">
+         <div className="bg-white rounded-[2rem] shadow-xl shadow-brand-medical/5 border border-slate-100 overflow-hidden">
             {/* Minimalist Medical ID Header */}
-            <div className="bg-indigo-950 p-8 flex items-center justify-between">
+            <div className="bg-brand-medical p-8 flex items-center justify-between">
                 <div>
-                   <h2 className="text-2xl font-black text-white tracking-tight uppercase">Medical Scanner</h2>
-                   <p className="text-cyan-400 font-bold text-[10px] uppercase tracking-widest mt-1">System Authentication</p>
+                   <h2 className="font-heading text-2xl font-black text-white tracking-tight uppercase">Medical Scanner</h2>
+                   <p className="text-brand-teal font-bold text-[10px] uppercase tracking-widest mt-1">System Authentication</p>
                 </div>
                 <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20 shadow-inner backdrop-blur-sm">
-                    <ShieldCheck className="w-8 h-8 text-cyan-400 stroke-[2.5]" />
+                    <Image src="/logo.webp" alt="SuperMedPros" width={40} height={40} className="rounded-lg" />
                 </div>
             </div>
 
@@ -66,7 +67,7 @@ export default function LoginPage() {
                    <input
                      type="text"
                      required
-                     className="block w-full rounded-2xl border-2 border-slate-200 py-3.5 px-5 text-slate-900 font-black hover:border-slate-300 focus:border-cyan-600 focus:ring-4 focus:ring-cyan-600/10 transition-all outline-none"
+                     className="block w-full rounded-2xl border-2 border-slate-200 py-3.5 px-5 text-brand-dark font-black hover:border-slate-300 focus:border-brand-action focus:ring-4 focus:ring-brand-action/10 transition-all outline-none"
                      value={username}
                      onChange={(e) => setUsername(e.target.value)}
                    />
@@ -79,7 +80,7 @@ export default function LoginPage() {
                    <input
                      type="password"
                      required
-                     className="block w-full rounded-2xl border-2 border-slate-200 py-3.5 px-5 text-slate-900 font-black tracking-widest hover:border-slate-300 focus:border-cyan-600 focus:ring-4 focus:ring-cyan-600/10 transition-all outline-none"
+                     className="block w-full rounded-2xl border-2 border-slate-200 py-3.5 px-5 text-brand-dark font-black tracking-widest hover:border-slate-300 focus:border-brand-action focus:ring-4 focus:ring-brand-action/10 transition-all outline-none"
                      value={password}
                      onChange={(e) => setPassword(e.target.value)}
                    />
@@ -90,7 +91,7 @@ export default function LoginPage() {
                      type="submit"
                      disabled={isLoading}
                      style={{ minHeight: '56px' }}
-                     className="w-full flex items-center justify-center rounded-2xl bg-indigo-950 px-4 text-xs font-black text-cyan-400 hover:bg-slate-900 shadow-xl shadow-indigo-950/20 transition-all active:scale-95 uppercase tracking-widest disabled:opacity-50"
+                     className="w-full flex items-center justify-center rounded-2xl bg-brand-medical px-4 text-xs font-black text-brand-teal hover:bg-brand-action hover:text-white shadow-xl shadow-brand-medical/20 transition-all active:scale-95 uppercase tracking-widest disabled:opacity-50"
                    >
                      {isLoading ? 'Authenticating...' : 'Commence Shift'}
                    </button>
@@ -98,9 +99,9 @@ export default function LoginPage() {
                </form>
             </div>
 
-            <div className="bg-slate-50 border-t border-slate-100 p-6 text-center">
+            <div className="bg-brand-light border-t border-slate-100 p-6 text-center">
                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-                  No active clearance? <a href="mailto:admin@supermedpros.com" className="text-cyan-600 hover:text-cyan-700 transition-colors ml-1 hover:underline">Contact Admin</a>
+                  No active clearance? <a href="mailto:admin@supermedpros.com" className="text-brand-action hover:text-brand-teal transition-colors ml-1 hover:underline">Contact Admin</a>
                </p>
             </div>
          </div>
